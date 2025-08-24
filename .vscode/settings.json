@@ -23,6 +23,7 @@
   },
   "peacock.color": "#42b883",
   "prettier.singleQuote": true,
+  "prettier.semi": false,
   "files.associations": {
     "*.css": "tailwindcss"
   },
