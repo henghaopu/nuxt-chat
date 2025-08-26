@@ -2,6 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "antfu.iconify",
     "Vue.volar",
     "Prisma.prisma",
     "bradlc.vscode-tailwindcss"
