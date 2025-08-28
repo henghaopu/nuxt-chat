@@ -2,7 +2,11 @@
 import { refIds } from '~/constants/refId.constants'
 
 const { chat, messages, sendMessage } = useChat()
-const { showScrollToBottomButton, scrollToBottom } = useChatScroll()
+const { showScrollToBottomButton, scrollToBottom, pinToBottom } =
+  useChatScroll()
+
+// { deep: true } tells Vue to track nested changes inside the watched value (objects/arrays)
+watch(() => messages.value, pinToBottom, { deep: true })
 
 function handleSendMessage(message: string) {
   sendMessage(message)

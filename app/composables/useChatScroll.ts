@@ -73,8 +73,19 @@ export default function useChatScroll() {
     requestAnimationFrame(step)
   }
 
+  async function pinToBottom() {
+    if (!isAtBottom.value) return
+    if (chatHistoryDivRef.value) {
+      // Ensures the new messages are rendered so scrollHeight/clientHeight are accurate, preventing a scroll to an outdated position.
+      await nextTick()
+      // Force immediate scroll without animation when messages change
+      scrollToBottom(true)
+    }
+  }
+
   return {
     showScrollToBottomButton,
     scrollToBottom,
+    pinToBottom,
   }
 }
