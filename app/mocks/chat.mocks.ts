@@ -1,7 +1,6 @@
-import type { Chat, ChatMessage } from '../types'
+import type { Chat, ChatMessage } from '~/types/chat.types'
 
-// Mock data for initial messages
-const MOCK_MESSAGES: ChatMessage[] = [
+const mockMessages: ChatMessage[] = [
   {
     id: '1',
     role: 'user',
@@ -26,11 +25,10 @@ const MOCK_MESSAGES: ChatMessage[] = [
   },
 ]
 
-// Mock data for initial chat
-const MOCK_CHAT: Chat = {
+const mockChat: Chat = {
   id: '1',
   title: 'Nuxt.js project help',
-  messages: [...MOCK_MESSAGES],
+  messages: [...mockMessages],
 }
 
-export { MOCK_CHAT, MOCK_MESSAGES }
+export { mockChat, mockMessages }

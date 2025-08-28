@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { refIds } from '~/constants/refId.constants'
+
 type ChatInputProps = {
   isStreaming?: boolean
 }
@@ -10,7 +12,7 @@ type ChatInputEmits = {
 const { isStreaming = false } = defineProps<ChatInputProps>()
 const emit = defineEmits<ChatInputEmits>()
 const newMessage = ref('')
-const textareaRef = useTemplateRef<HTMLTextAreaElement>('textareaRef')
+const textareaRef = useTemplateRef<HTMLTextAreaElement>(refIds.promptTextarea)
 
 onMounted(() => {
   textareaRef.value?.focus()
@@ -56,7 +58,7 @@ function adjustTextareaHeight() {
     @submit.prevent="handleSendMessage"
   >
     <textarea
-      ref="textareaRef"
+      :ref="refIds.promptTextarea"
       v-model="newMessage"
       rows="1"
       class="resize-none w-full mr-6 outline-none"

@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import { refIds } from '~/constants/refId.constants'
+
 const { chat, messages, sendMessage } = useChat()
 
-const handleSendMessage = (message: string) => {
+function handleSendMessage(message: string) {
   sendMessage(message)
 }
 </script>
 
 <template>
-  <div class="h-full overflow-y-auto box-border">
+  <div :ref="refIds.chatHistoryDiv" class="h-full overflow-y-auto box-border">
     <UContainer class="max-w-4xl h-full">
       <div
-        v-if="messages?.length === 0"
+        v-if="!messages?.length"
         class="flex items-center justify-center min-h-full flex-1"
       >
         <div class="flex flex-col gap-8 p-8 bg-[var(--ui-bg-elevated)] w-full">
