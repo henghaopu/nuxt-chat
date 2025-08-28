@@ -2,6 +2,7 @@
 import { refIds } from '~/constants/refId.constants'
 
 const { chat, messages, sendMessage } = useChat()
+const { showScrollToBottomButton, scrollToBottom } = useChatScroll()
 
 function handleSendMessage(message: string) {
   sendMessage(message)
@@ -44,6 +45,16 @@ function handleSendMessage(message: string) {
           </div>
         </div>
         <div class="fixed bottom-6 w-[calc(100%-3rem)] max-w-4xl">
+          <div class="absolute left-1/2 bottom-20">
+            <UButton
+              v-if="showScrollToBottomButton"
+              color="neutral"
+              variant="outline"
+              icon="i-heroicons-arrow-down"
+              class="rounded-full shadow-sm"
+              @click="() => scrollToBottom()"
+            />
+          </div>
           <ChatInput @send-message="handleSendMessage" />
         </div>
       </template>
