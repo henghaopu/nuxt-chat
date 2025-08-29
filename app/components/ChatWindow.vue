@@ -1,15 +1,27 @@
 <script setup lang="ts">
 import { refIds } from '~/constants/refId.constants'
+import type { Chat, ChatMessage } from '~/types/chat.types'
 
-const { chat, messages, sendMessage } = useChat()
+type ChatWindowProps = {
+  chat: Chat
+  messages: ChatMessage[]
+}
+
+type ChatWindowEmits = {
+  'send-message': [message: string]
+}
+
+const { chat, messages } = defineProps<ChatWindowProps>()
+const emit = defineEmits<ChatWindowEmits>()
+
 const { showScrollToBottomButton, scrollToBottom, pinToBottom } =
   useChatScroll()
 
 // { deep: true } tells Vue to track nested changes inside the watched value (objects/arrays)
-watch(() => messages.value, pinToBottom, { deep: true })
+watch(() => messages, pinToBottom, { deep: true })
 
 function handleSendMessage(message: string) {
-  sendMessage(message)
+  emit('send-message', message)
 }
 </script>
 
