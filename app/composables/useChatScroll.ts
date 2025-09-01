@@ -1,4 +1,4 @@
-import { refIds } from '~/constants/refId.constants'
+import { refIds } from '~/utils/refId.constants'
 
 // Pixel threshold to consider the user "near the bottom" of the chat history
 const scrollBottomTolerancePx = 200

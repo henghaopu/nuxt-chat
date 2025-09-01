@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { refIds } from '~/constants/refId.constants'
+import { refIds } from '~/utils/refId.constants'
 
 type ChatInputProps = {
   isStreaming?: boolean

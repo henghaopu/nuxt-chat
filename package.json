@@ -14,10 +14,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.23",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/ui": "^3.3.2",
+    "ai": "^5.0.28",
     "eslint": "^9.34.0",
     "nuxt": "^4.0.3",
+    "ollama-ai-provider": "^1.2.0",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },

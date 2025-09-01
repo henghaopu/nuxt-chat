@@ -1,5 +1,3 @@
-import type { refIds } from '~/constants/refId.constants'
-
 export type Role = 'user' | 'assistant'
 
 export interface ChatMessage {
@@ -13,5 +11,3 @@ export interface Chat {
   title: string
   messages: ChatMessage[]
 }
-
-export type ChatRefId = (typeof refIds)[keyof typeof refIds]

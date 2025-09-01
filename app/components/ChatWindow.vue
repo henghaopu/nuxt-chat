@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { refIds } from '~/constants/refId.constants'
+import { refIds } from '~/utils/refId.constants'
 import type { Chat, ChatMessage } from '~/types/chat.types'
 
 type ChatWindowProps = {
