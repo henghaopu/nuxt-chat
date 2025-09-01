@@ -20,9 +20,13 @@ export function createOllamaModel() {
 }
 
 export async function generateAIResponse(
-  model: LanguageModel,
+  model: LanguageModel, // Inject model dependency
   messages: ChatMessage[],
 ) {
+  // Empty messages array is likely a bug in the calling code
+  if (messages.length === 0)
+    return new Error('Cannot generate AI response: no messages provided')
+
   const response = await generateText({ model, messages })
   return response.text.trim()
 }
