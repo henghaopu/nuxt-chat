@@ -1,5 +1,3 @@
-import type { Chat, ChatMessage } from '~/types/chat.types'
-
 const mockMessages: ChatMessage[] = [
   {
     id: '1',

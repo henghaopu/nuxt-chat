@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { refIds } from '~/utils/refId.constants'
-import type { Chat, ChatMessage } from '~/types/chat.types'
 
 type ChatWindowProps = {
   chat: Chat
   messages: ChatMessage[]
+  isTyping: boolean
 }
 
 type ChatWindowEmits = {
@@ -58,6 +58,14 @@ function handleSendMessage(message: string) {
             }"
           >
             <p class="wrap-break-word">{{ message.content }}</p>
+          </div>
+          <div v-if="isTyping" class="p-4 text-gray-500">
+            <span>Thinking</span>
+            <span class="ml-1">
+              <span class="animate-pulse">.</span>
+              <span class="animate-pulse delay-200">.</span>
+              <span class="animate-pulse delay-500">.</span>
+            </span>
           </div>
         </div>
         <div class="fixed bottom-6 w-[calc(100%-3rem)] max-w-4xl">
