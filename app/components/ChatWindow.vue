@@ -57,7 +57,7 @@ function handleSendMessage(message: string) {
                 message.role === 'user',
             }"
           >
-            <p class="wrap-break-word">{{ message.content }}</p>
+            <MarkdownRenderer :content="message.content" />
           </div>
           <div v-if="isTyping" class="p-4 text-gray-500">
             <span>Thinking</span>

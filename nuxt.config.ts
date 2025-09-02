@@ -11,4 +11,10 @@ export default defineNuxtConfig({
     // db connection
     // auth provider
   },
+  mdc: {
+    highlight: {
+      theme: 'dark-plus',
+      langs: ['js', 'ts', 'vue', 'json', 'css', 'html', 'bash', 'markdown'],
+    },
+  },
 })
