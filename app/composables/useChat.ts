@@ -4,10 +4,11 @@ export default function useChat() {
   const chat = ref<Chat>(mockChat)
   const messages = computed<ChatMessage[]>(() => chat.value.messages)
 
-  function createMessage(message: string, role: Role) {
-    const id = messages.value.length.toString()
+  function createMessage(content: string, role: Role) {
+    const currentMessageCount = messages.value.length
+    const newMessageIndex = currentMessageCount + 1
 
-    return { id, role, content: message }
+    return { id: newMessageIndex.toString(), content, role }
   }
 
   async function sendMessage(message: string) {
