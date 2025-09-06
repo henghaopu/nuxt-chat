@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { refIds } from '~/utils/refId.constants'
+import useChatScroll from '~/composables/useChatScroll'
 
 type ChatWindowProps = {
   chat: Chat

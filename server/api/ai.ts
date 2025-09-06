@@ -4,13 +4,13 @@ import { createOpenAIModel, generateAIResponse } from '../services/aiService'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { messages } = body
-  const id = messages.length.toString()
+  const currentMessageCount = messages.length
   const openAIModel = createOpenAIModel()
   const response = await generateAIResponse(openAIModel, messages)
 
   return {
-    id,
-    role: 'assistant',
+    id: currentMessageCount.toString(),
     content: response,
+    role: 'assistant',
   }
 })

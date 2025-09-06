@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import useChats from '~/composables/useChats'
+
 defineOptions({ name: 'AppHeader' })
 const { title } = useAppConfig()
 </script>

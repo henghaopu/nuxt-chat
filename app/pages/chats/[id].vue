@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { chat, messages, sendMessage } = useChat()
+import useChat from '~/composables/useChat'
 const appConfig = useAppConfig()
 const isTyping = ref(false)
 
