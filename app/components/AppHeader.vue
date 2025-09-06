@@ -1,4 +1,5 @@
 <script setup lang="ts">
+defineOptions({ name: 'AppHeader' })
 const { title } = useAppConfig()
 </script>
 

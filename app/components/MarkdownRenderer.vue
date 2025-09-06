@@ -3,6 +3,7 @@ type MarkdownRendererProps = {
   content: string
 }
 
+defineOptions({ name: 'MarkdownRenderer' })
 const { content } = defineProps<MarkdownRendererProps>()
 </script>
 

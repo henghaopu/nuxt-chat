@@ -9,6 +9,7 @@ type ChatInputEmits = {
   'send-message': [message: string]
 }
 
+defineOptions({ name: 'ChatInput' })
 const { isStreaming = false } = defineProps<ChatInputProps>()
 const emit = defineEmits<ChatInputEmits>()
 const newMessage = ref('')

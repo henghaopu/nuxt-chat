@@ -11,6 +11,7 @@ type ChatWindowEmits = {
   'send-message': [message: string]
 }
 
+defineOptions({ name: 'ChatWindow' })
 const { chat, messages } = defineProps<ChatWindowProps>()
 const emit = defineEmits<ChatWindowEmits>()
 

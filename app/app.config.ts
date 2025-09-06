@@ -1,6 +1,6 @@
 export default defineAppConfig({
   // app meta data
-  title: 'Nuxt Chat',
+  title: 'ChatHPU',
   // theme
   ui: {
     colors: {
