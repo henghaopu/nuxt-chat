@@ -1,4 +1,7 @@
-import { createOpenAIModel, generateAIResponse } from '../services/aiService'
+import {
+  createOpenAIModel,
+  generateAIResponseText,
+} from '../services/aiService'
 
 // Nuxt (via Nitro/H3) does file‑based server routing and auto-registers the default export of each file as the HTTP request handler for that path.
 export default defineEventHandler(async (event) => {
@@ -6,11 +9,11 @@ export default defineEventHandler(async (event) => {
   const { messages } = body
   const currentMessageCount = messages.length
   const openAIModel = createOpenAIModel()
-  const response = await generateAIResponse(openAIModel, messages)
+  const responseText = await generateAIResponseText(openAIModel, messages)
 
   return {
     id: currentMessageCount.toString(),
-    content: response,
+    content: responseText,
     role: 'assistant',
   }
 })

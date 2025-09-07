@@ -2,7 +2,13 @@
 import useChats from '~/composables/useChats'
 
 defineOptions({ name: 'AppHeader' })
+
 const { title } = useAppConfig()
+const { createChat } = useChats()
+
+function handleCreateChat() {
+  createChat()
+}
 </script>
 
 <template>
@@ -11,7 +17,7 @@ const { title } = useAppConfig()
   >
     <div class="flex items-center gap-4">
       <UButton icon="i-lucide-menu" variant="soft" />
-      <UButton icon="i-lucide-plus" to="/chats/1">New Chat</UButton>
+      <UButton icon="i-lucide-plus" @click="handleCreateChat">New Chat</UButton>
     </div>
     <div class="font-semibold text-[1.125rem]">
       {{ title }}

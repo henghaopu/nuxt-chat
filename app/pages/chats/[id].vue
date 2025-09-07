@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import useChat from '~/composables/useChat'
+
+const route = useRoute()
+const { chat, messages, sendMessage } = useChat(route.params.id as string)
 const appConfig = useAppConfig()
 const isTyping = ref(false)
 
 useHead({
-  title: () => chat.value.title?.trim() || undefined,
+  title: () => chat.value?.title?.trim() || undefined,
   titleTemplate: (t) => {
     const base = appConfig.title
     if (t && base) return `${t} - ${base}`

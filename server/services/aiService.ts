@@ -19,7 +19,7 @@ export function createOllamaModel() {
   return ollama('llama3.2')
 }
 
-export async function generateAIResponse(
+export async function generateAIResponseText(
   model: LanguageModel, // Inject model dependency
   messages: ChatMessage[],
 ) {
