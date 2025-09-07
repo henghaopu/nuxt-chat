@@ -8,7 +8,7 @@ export default function useChats() {
     const newChatIndex = currentChatCount + 1
     const newChat = {
       id: newChatIndex.toString(),
-      title: 'New Chat',
+      title: `New Chat (${newChatIndex})`,
       messages: [],
       projectId: options.projectId,
       createdAt: new Date(),

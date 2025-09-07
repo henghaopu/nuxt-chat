@@ -9,7 +9,7 @@ async function handleStartChat() {
 </script>
 
 <template>
-  <UContainer class="flex flex-col items-center justify-center h-screen">
+  <UContainer class="flex flex-col items-center justify-center h-full">
     <h1 class="text-4xl font-bold">Ready to chat with AI?</h1>
     <UButton class="mt-4" @click="handleStartChat">Start Chat</UButton>
   </UContainer>
