@@ -1,5 +1,14 @@
 <script setup lang="ts">
 const isSidebarOpen = ref(true)
+const { width } = useWindowSize()
+
+watch(
+  width,
+  (newWidth) => {
+    isSidebarOpen.value = newWidth >= TABLET_BREAKPOINT
+  },
+  { immediate: true },
+)
 </script>
 
 <template>

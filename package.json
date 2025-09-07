@@ -26,6 +26,8 @@
   },
   "devDependencies": {
     "@nuxtjs/mdc": "^0.17.3",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/nuxt": "^13.9.0",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "typescript": "^5.9.2"
