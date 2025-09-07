@@ -15,6 +15,14 @@ const mockChat: Chat = {
   id: '1',
   title: 'Welcome to the chat!',
   messages: [...mockMessages],
+  projectId: '1',
+  createdAt: new Date(),
+  updatedAt: new Date(),
 }
 
-export { mockChat, mockMessages }
+const mockProject: Project = {
+  id: '1',
+  name: 'Project 1',
+}
+
+export { mockChat, mockMessages, mockProject }
