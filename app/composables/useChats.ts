@@ -16,11 +16,18 @@ export default function useChats() {
     }
 
     chats.value.push(newChat)
+
+    return newChat
+  }
+
+  async function createChatAndNavigate(options: { projectId?: string } = {}) {
+    const chat = createChat(options)
+    await navigateTo(`/chats/${chat.id}`)
   }
 
   function findChatsByProjectId(projectId: string) {
     return chats.value.filter((c) => c.projectId === projectId)
   }
 
-  return { chats, createChat, findChatsByProjectId }
+  return { chats, createChat, createChatAndNavigate, findChatsByProjectId }
 }

@@ -4,10 +4,10 @@ import useChats from '~/composables/useChats'
 defineOptions({ name: 'AppHeader' })
 
 const { title } = useAppConfig()
-const { createChat } = useChats()
+const { createChatAndNavigate } = useChats()
 
-function handleCreateChat() {
-  createChat()
+async function handleCreateChat() {
+  await createChatAndNavigate()
 }
 </script>
 
