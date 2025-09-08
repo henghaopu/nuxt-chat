@@ -1,14 +1,22 @@
 <script setup lang="ts">
-const isSidebarOpen = ref(true)
+import { isTabletAndUp } from '~/utils/breakpoint.constants'
+
 const { width } = useWindowSize()
 
-watch(
-  width,
-  (newWidth) => {
-    isSidebarOpen.value = newWidth >= TABLET_BREAKPOINT
-  },
-  { immediate: true },
-)
+// Mobile-first: start with sidebar closed to prevent hydration mismatch
+// This ensures server and client render the same initial state
+const isSidebarOpen = ref(false)
+
+// Wait for hydration to complete before making responsive adjustments
+onMounted(() => {
+  // Set initial state based on current screen size
+  isSidebarOpen.value = isTabletAndUp(width.value)
+
+  // Watch for future changes
+  watchEffect(() => {
+    isSidebarOpen.value = isTabletAndUp(width.value)
+  })
+})
 </script>
 
 <template>
