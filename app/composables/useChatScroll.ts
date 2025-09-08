@@ -74,13 +74,21 @@ export default function useChatScroll() {
   }
 
   async function pinToBottom() {
-    if (!isAtBottom.value) return
-    if (chatHistoryDivRef.value) {
-      // Ensures the new messages are rendered so scrollHeight/clientHeight are accurate, preventing a scroll to an outdated position.
-      await nextTick()
-      // Force immediate scroll without animation when messages change
+    if (!chatHistoryDivRef.value) return
+
+    // Store if user was at bottom before new content
+    const wasAtBottom = isAtBottom.value
+
+    // Wait for new content to be rendered
+    await nextTick()
+
+    // If user was at bottom, keep them there
+    if (wasAtBottom) {
       scrollToBottom(true)
     }
+
+    // Always update the proximity state after content changes
+    updateBottomProximity()
   }
 
   return {
