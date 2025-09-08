@@ -49,7 +49,7 @@ function handleSendMessage(message: string) {
             {{ chat?.title || 'Untitled Chat' }}
           </h1>
         </div>
-        <div class="flex flex-col gap-4 mb-6 pb-32">
+        <div class="flex flex-col gap-4 mb-6 pb-16">
           <div
             v-for="message in messages"
             :key="message.id"
