@@ -1,4 +1,5 @@
 import { refIds } from '~/utils/refId.constants'
+import useFocus from '~/composables/useFocus'
 
 // Pixel threshold to consider the user "near the bottom" of the chat history
 const scrollBottomTolerancePx = 200
@@ -16,14 +17,19 @@ export default function useChatScroll() {
   const isAtBottom = ref(true)
   const showScrollToBottomButton = computed(() => !isAtBottom.value)
 
+  const { focusIfNotMobile } = useFocus()
+
   // Add scroll event listener
-  onMounted(() => {
+  onMounted(async () => {
     if (!chatHistoryDivRef.value) return
+
     chatHistoryDivRef.value.addEventListener('scroll', updateBottomProximity)
-    nextTick(() => {
-      scrollToBottom(true) // Use immediate scroll on mount
-      promptTextareaRef.value?.focus()
-    })
+
+    await nextTick()
+    // Use immediate scroll on mount
+    scrollToBottom(true)
+    // Only focus textarea on non-mobile devices to prevent virtual keyboard
+    focusIfNotMobile(promptTextareaRef)
   })
 
   function updateBottomProximity() {

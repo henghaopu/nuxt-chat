@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { refIds } from '~/utils/refId.constants'
+import useFocus from '~/composables/useFocus'
 
 type ChatInputProps = {
   isStreaming?: boolean
@@ -14,9 +15,10 @@ const { isStreaming = false } = defineProps<ChatInputProps>()
 const emit = defineEmits<ChatInputEmits>()
 const newMessage = ref('')
 const textareaRef = useTemplateRef<HTMLTextAreaElement>(refIds.promptTextarea)
+const { focusIfNotMobile } = useFocus()
 
 onMounted(() => {
-  textareaRef.value?.focus()
+  focusIfNotMobile(textareaRef)
 })
 
 watch(
@@ -28,7 +30,7 @@ watch(
     // Once streaming finishes, we want the user to be able to type immediately
     // The nextTick() ensures any DOM updates (like re-enabling the textarea) are complete before focusing
     await nextTick() // Wait for DOM updates
-    textareaRef.value?.focus() // Focus the textarea
+    focusIfNotMobile(textareaRef) // Focus the textarea only on non-mobile
   },
 )
 
@@ -40,7 +42,7 @@ function handleSendMessage() {
   // nextTick() is a Vue utility function that waits for the next DOM update cycle to complete.
   nextTick(() => {
     adjustTextareaHeight()
-    textareaRef.value?.focus()
+    focusIfNotMobile(textareaRef) // Focus only on non-mobile devices
   })
 }
 
