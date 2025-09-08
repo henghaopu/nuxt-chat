@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isTabletAndUp } from '~/utils/breakpoint.constants'
+import { isExtraLargeAndUp } from '~/utils/breakpoint.constants'
 
 const { width } = useWindowSize()
 
@@ -10,11 +10,11 @@ const isSidebarOpen = ref(false)
 // Wait for hydration to complete before making responsive adjustments
 onMounted(() => {
   // Set initial state based on current screen size
-  isSidebarOpen.value = isTabletAndUp(width.value)
+  isSidebarOpen.value = isExtraLargeAndUp(width.value)
 
   // Watch for future changes
   watchEffect(() => {
-    isSidebarOpen.value = isTabletAndUp(width.value)
+    isSidebarOpen.value = isExtraLargeAndUp(width.value)
   })
 })
 </script>

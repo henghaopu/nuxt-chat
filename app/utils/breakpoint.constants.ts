@@ -13,10 +13,13 @@ export const BREAKPOINTS = {
 export const MOBILE_BREAKPOINT = BREAKPOINTS.SM // Show sidebar on tablet and up
 export const TABLET_BREAKPOINT = BREAKPOINTS.MD
 export const DESKTOP_BREAKPOINT = BREAKPOINTS.LG
+export const EXTRA_LARGE_BREAKPOINT = BREAKPOINTS.XL
 
 // Helper functions for responsive logic
 export const isTabletAndUp = (width: number) => width >= TABLET_BREAKPOINT
 export const isDesktopAndUp = (width: number) => width >= DESKTOP_BREAKPOINT
+export const isExtraLargeAndUp = (width: number) =>
+  width >= EXTRA_LARGE_BREAKPOINT
 export const isMobile = (width: number) => width < TABLET_BREAKPOINT
 
 // Device type detector
