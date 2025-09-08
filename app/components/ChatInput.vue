@@ -55,7 +55,7 @@ function adjustTextareaHeight() {
 
 <template>
   <form
-    class="relative border border-solid border-[var(--ui-border)] rounded-4xl py-4 pr-8 pl-5 flex bg-[var(--ui-bg)] hover:shadow-md dark:shadow-lg dark:shadow-white/20"
+    class="relative border border-solid border-[var(--ui-border-accented)] rounded-4xl py-4 pr-8 pl-5 flex bg-[var(--ui-bg)] hover:shadow-md dark:shadow-lg dark:shadow-white/20"
     @submit.prevent="handleSendMessage"
   >
     <textarea
