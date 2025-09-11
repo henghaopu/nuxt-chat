@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { refIds } from '~/utils/refId.constants'
-import useChatScroll from '~/composables/useChatScroll'
+import useScrollToBottom from '~/composables/useScrollToBottom'
 
 type ChatWindowProps = {
   chat: Chat
@@ -23,10 +23,8 @@ const promptTextareaRef = useTemplateRef<HTMLTextAreaElement>(
 )
 
 // Use the generic scroll composable
-const { showScrollToBottomButton, scrollToBottom, pinToBottom } = useChatScroll(
-  chatHistoryDivRef,
-  { autoFocusRef: promptTextareaRef },
-)
+const { showScrollToBottomButton, scrollToBottom, pinToBottom } =
+  useScrollToBottom(chatHistoryDivRef, { autoFocusRef: promptTextareaRef })
 
 // { deep: true } tells Vue to track nested changes inside the watched value (objects/arrays)
 watch(() => messages, pinToBottom, { deep: true })

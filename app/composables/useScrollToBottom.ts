@@ -2,11 +2,12 @@
 const scrollBottomTolerancePx = 200
 
 /**
- * Generic composable for managing scroll behavior in a scrollable container
+ * Generic composable for managing scroll-to-bottom behavior in a scrollable container
+ * Provides smooth scrolling, proximity detection, and auto-scroll functionality
  * @param scrollContainerRef - Reference to the scrollable container element
  * @param options - Configuration options
  */
-export default function useChatScroll(
+export default function useScrollToBottom(
   scrollContainerRef: Ref<HTMLElement | null>,
   options: {
     tolerance?: number
