@@ -16,8 +16,17 @@ defineOptions({ name: 'ChatWindow' })
 const { chat, messages } = defineProps<ChatWindowProps>()
 const emit = defineEmits<ChatWindowEmits>()
 
-const { showScrollToBottomButton, scrollToBottom, pinToBottom } =
-  useChatScroll()
+// Create refs for the scroll container and auto-focus element
+const chatHistoryDivRef = useTemplateRef<HTMLDivElement>(refIds.chatHistoryDiv)
+const promptTextareaRef = useTemplateRef<HTMLTextAreaElement>(
+  refIds.promptTextarea,
+)
+
+// Use the generic scroll composable
+const { showScrollToBottomButton, scrollToBottom, pinToBottom } = useChatScroll(
+  chatHistoryDivRef,
+  { autoFocusRef: promptTextareaRef },
+)
 
 // { deep: true } tells Vue to track nested changes inside the watched value (objects/arrays)
 watch(() => messages, pinToBottom, { deep: true })

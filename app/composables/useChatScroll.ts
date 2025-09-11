@@ -1,17 +1,19 @@
-import { refIds } from '~/utils/refId.constants'
-import useFocus from '~/composables/useFocus'
-
 // Pixel threshold to consider the user "near the bottom" of the chat history
 const scrollBottomTolerancePx = 200
 
-export default function useChatScroll() {
-  // inputs
-  const promptTextareaRef = useTemplateRef<HTMLTextAreaElement>(
-    refIds.promptTextarea,
-  )
-  const chatHistoryDivRef = useTemplateRef<HTMLDivElement>(
-    refIds.chatHistoryDiv,
-  )
+/**
+ * Generic composable for managing scroll behavior in a scrollable container
+ * @param scrollContainerRef - Reference to the scrollable container element
+ * @param options - Configuration options
+ */
+export default function useChatScroll(
+  scrollContainerRef: Ref<HTMLElement | null>,
+  options: {
+    tolerance?: number
+    autoFocusRef?: Ref<HTMLElement | null>
+  } = {},
+) {
+  const { tolerance = scrollBottomTolerancePx, autoFocusRef } = options
 
   // reactive states
   const isAtBottom = ref(true)
@@ -21,39 +23,42 @@ export default function useChatScroll() {
 
   // Add scroll event listener
   onMounted(async () => {
-    if (!chatHistoryDivRef.value) return
+    if (!scrollContainerRef.value) return
 
-    chatHistoryDivRef.value.addEventListener('scroll', updateBottomProximity)
+    scrollContainerRef.value.addEventListener('scroll', updateBottomProximity)
 
     await nextTick()
     // Use immediate scroll on mount
     scrollToBottom(true)
-    // Only focus textarea on non-mobile devices to prevent virtual keyboard
-    focusIfNotMobile(promptTextareaRef)
+
+    // Auto-focus if element ref is provided
+    if (autoFocusRef) {
+      focusIfNotMobile(autoFocusRef)
+    }
   })
 
   function updateBottomProximity() {
-    if (!chatHistoryDivRef.value) return
-    const { scrollTop, clientHeight, scrollHeight } = chatHistoryDivRef.value
+    if (!scrollContainerRef.value) return
+    const { scrollTop, clientHeight, scrollHeight } = scrollContainerRef.value
     const remainingScrollPx = scrollHeight - (scrollTop + clientHeight)
     // visual reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
-    isAtBottom.value = remainingScrollPx <= scrollBottomTolerancePx
+    isAtBottom.value = remainingScrollPx <= tolerance
   }
 
   // Smooth scroll to bottom
   function scrollToBottom(immediate = false) {
-    if (!chatHistoryDivRef.value) return
+    if (!scrollContainerRef.value) return
 
     const targetScrollTop =
-      chatHistoryDivRef.value.scrollHeight -
-      chatHistoryDivRef.value.clientHeight
+      scrollContainerRef.value.scrollHeight -
+      scrollContainerRef.value.clientHeight
 
     if (immediate) {
-      chatHistoryDivRef.value.scrollTop = targetScrollTop
+      scrollContainerRef.value.scrollTop = targetScrollTop
       return
     }
 
-    const startScrollTop = chatHistoryDivRef.value.scrollTop
+    const startScrollTop = scrollContainerRef.value.scrollTop
     const distance = targetScrollTop - startScrollTop
     const duration = 300
 
@@ -66,8 +71,8 @@ export default function useChatScroll() {
           ? 4 * progress * progress * progress
           : 1 - Math.pow(-2 * progress + 2, 3) / 2
 
-      if (chatHistoryDivRef.value) {
-        chatHistoryDivRef.value.scrollTop =
+      if (scrollContainerRef.value) {
+        scrollContainerRef.value.scrollTop =
           startScrollTop + distance * easeInOutCubic
 
         if (progress < 1) {
@@ -80,7 +85,7 @@ export default function useChatScroll() {
   }
 
   async function pinToBottom() {
-    if (!chatHistoryDivRef.value) return
+    if (!scrollContainerRef.value) return
 
     // Store if user was at bottom before new content
     const wasAtBottom = isAtBottom.value
@@ -97,9 +102,21 @@ export default function useChatScroll() {
     updateBottomProximity()
   }
 
+  // Cleanup
+  onUnmounted(() => {
+    if (scrollContainerRef.value) {
+      scrollContainerRef.value.removeEventListener(
+        'scroll',
+        updateBottomProximity,
+      )
+    }
+  })
+
   return {
+    isAtBottom: readonly(isAtBottom),
     showScrollToBottomButton,
     scrollToBottom,
     pinToBottom,
+    updateBottomProximity,
   }
 }
