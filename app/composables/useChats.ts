@@ -22,6 +22,12 @@ export default function useChats() {
 
   async function createChatAndNavigate(options: { projectId?: string } = {}) {
     const chat = createChat(options)
+    // Use the source of truth that was passed in
+    if (options.projectId) {
+      await navigateTo(`/projects/${options.projectId}/chats/${chat.id}`)
+      return
+    }
+
     await navigateTo(`/chats/${chat.id}`)
   }
 

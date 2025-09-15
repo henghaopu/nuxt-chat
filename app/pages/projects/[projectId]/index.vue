@@ -17,7 +17,10 @@ const chats = findChatsByProjectId(projectId)
         :key="chat.id"
         :to="`/projects/${projectId}/chats/${chat.id}`"
       >
-        <UCard class="h-full">
+        <UCard
+          class="h-full"
+          :variant="$colorMode.value === 'dark' ? 'soft' : 'outline'"
+        >
           <template #header>
             <h3 class="text-md font-medium">
               {{ chat.title || 'Untitled Chat' }}

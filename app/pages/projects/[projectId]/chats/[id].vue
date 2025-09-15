@@ -2,13 +2,17 @@
 import useChat from '~/composables/useChat'
 
 const route = useRoute()
-const { chat, messages, sendMessage } = useChat(route.params.id as string)
+const { projectId, id } = route.params as {
+  projectId: string
+  id: string
+}
+
+const { chat, messages, sendMessage } = useChat(id)
 const appConfig = useAppConfig()
 const isTyping = ref(false)
 
 if (!chat.value) {
-  // https://nuxt.com/docs/4.x/guide/directory-structure/app/pages#programmatic-navigation
-  await navigateTo('/', { replace: true })
+  await navigateTo(`/projects/${projectId}`, { replace: true })
 }
 
 useHead({
@@ -23,17 +27,17 @@ useHead({
 async function handleSendMessage(message: string) {
   isTyping.value = true
   try {
-    await sendMessage(message) // Might succeed or fail
+    await sendMessage(message)
   } finally {
-    isTyping.value = false // Always runs, no matter what
+    isTyping.value = false
   }
 }
 </script>
 
 <template>
   <ChatWindow
-    :chat="chat"
-    :messages="messages"
+    :chat
+    :messages
     :is-typing="isTyping"
     @send-message="handleSendMessage"
   />

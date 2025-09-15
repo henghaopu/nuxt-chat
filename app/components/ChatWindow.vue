@@ -3,7 +3,7 @@ import { refIds } from '~/utils/refId.constants'
 import useScrollToBottom from '~/composables/useScrollToBottom'
 
 type ChatWindowProps = {
-  chat: Chat
+  chat: Chat | undefined // Required but can be undefined
   messages: ChatMessage[]
   isTyping: boolean
 }
