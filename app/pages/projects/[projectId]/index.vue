@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
-const projectId = route.params.projectId as string // No computed needed
+const projectId = route.params.projectId as string
 
 const { findChatsByProjectId } = useChats()
 const chats = findChatsByProjectId(projectId)
@@ -17,6 +17,8 @@ const chats = findChatsByProjectId(projectId)
         :key="chat.id"
         :to="`/projects/${projectId}/chats/${chat.id}`"
       >
+        <!-- Hidden element to force $colorMode reactivity -->
+        <span v-show="false">{{ $colorMode.value }}</span>
         <UCard
           class="h-full"
           :variant="$colorMode.value === 'dark' ? 'soft' : 'outline'"
