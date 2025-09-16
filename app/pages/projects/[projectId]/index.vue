@@ -4,6 +4,12 @@ const projectId = route.params.projectId as string
 
 const { findChatsByProjectId } = useChats()
 const chats = findChatsByProjectId(projectId)
+const colorMode = useColorMode()
+
+// Use computed to ensure reactivity and avoid hydration issues
+const cardVariant = computed(() =>
+  colorMode.value === 'dark' ? 'soft' : 'outline',
+)
 </script>
 
 <template>
@@ -17,12 +23,7 @@ const chats = findChatsByProjectId(projectId)
         :key="chat.id"
         :to="`/projects/${projectId}/chats/${chat.id}`"
       >
-        <!-- Hidden element to force $colorMode reactivity -->
-        <span v-show="false">{{ $colorMode.value }}</span>
-        <UCard
-          class="h-full"
-          :variant="$colorMode.value === 'dark' ? 'soft' : 'outline'"
-        >
+        <UCard class="h-full" :variant="cardVariant">
           <template #header>
             <h3 class="text-md font-medium">
               {{ chat.title || 'Untitled Chat' }}
