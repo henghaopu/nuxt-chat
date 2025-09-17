@@ -11,6 +11,8 @@ export default function useProjects() {
       name: `Project ${newProjectIndex}`,
     }
     projects.value.push(newProject)
+
+    return newProject
   }
 
   return {

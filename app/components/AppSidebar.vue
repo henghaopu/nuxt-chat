@@ -9,37 +9,52 @@ type AppSidebarProps = {
 defineProps<AppSidebarProps>()
 
 const route = useRoute()
-const { chats } = useChats()
+const { projects, createProject } = useProjects() // Ensure projects are loaded
+const { chats, findChatsByProjectId, createChatAndNavigate } = useChats()
+const chatsInCurrentProject = computed(() =>
+  findChatsByProjectId(route.params.projectId as string),
+)
+const formattedProjectItems = computed(() => {
+  if (!projects.value) return []
+
+  // Sort projects by creation date (recent to past)
+  // Using ID as proxy for creation order since higher ID = more recent
+  const sortedProjects = [...projects.value].sort((a, b) => {
+    return parseInt(b.id) - parseInt(a.id) // Descending order (recent to past)
+  })
+
+  return sortedProjects.map(formatProjectItem)
+})
 const chatsWithoutProject = computed(() =>
   chats.value.filter((chat) => chat.projectId === undefined),
 )
-const last2DaysChatMenuItems = computed(() =>
-  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 0, 1),
+const todayChatMenuItems = computed(() =>
+  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 0, 0),
 )
-const last7DaysChatMenuItems = computed(() =>
+const lastWeekChatMenuItems = computed(() =>
   getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 1, 7),
 )
-const last30DaysChatMenuItems = computed(() =>
-  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 7, 30),
+const lastMonthChatMenuItems = computed(() =>
+  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 8, 30),
 )
 const olderThan30DaysChatMenuItems = computed(() =>
-  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 30),
+  getChatMenuItemsByDaysAgo(chatsWithoutProject.value, 31),
 )
 const chatSections = computed(() => {
   const allSections = [
     {
-      title: 'Recent',
-      items: last2DaysChatMenuItems.value,
-      alwaysShow: true, // Always show Recent section
+      title: 'Today',
+      items: todayChatMenuItems.value,
+      alwaysShow: true, // Always show Today section
     },
     {
       title: 'Last 7 Days',
-      items: last7DaysChatMenuItems.value,
+      items: lastWeekChatMenuItems.value,
       alwaysShow: false,
     },
     {
       title: 'Last 30 Days',
-      items: last30DaysChatMenuItems.value,
+      items: lastMonthChatMenuItems.value,
       alwaysShow: false,
     },
     {
@@ -73,6 +88,10 @@ watch(
   },
 )
 
+function isCurrentProject(projectId: string) {
+  return route.params.projectId === projectId
+}
+
 function getChatMenuItemsByDaysAgo(
   chats: Chat[],
   minDaysAgo: number,
@@ -91,6 +110,49 @@ function formatChatItem(chat: Chat): NavigationMenuItem {
     active: route.params.id === chat.id,
   }
 }
+
+function formatProjectChatItem(
+  project: Project,
+  chat: Chat,
+): NavigationMenuItem {
+  return {
+    label: chat.title || 'Untitled Chat',
+    to: `/projects/${project.id}/chats/${chat.id}`,
+    active:
+      route.params.projectId === project.id && route.params.id === chat.id,
+  }
+}
+
+function formatProjectItem(project: Project): NavigationMenuItem {
+  const isCurrent = isCurrentProject(project.id)
+
+  const baseItem: NavigationMenuItem = {
+    label: project.name || 'Untitled Project',
+    to: `/projects/${project.id}`,
+    active: isCurrent,
+    defaultOpen: isCurrent,
+  }
+
+  if (isCurrent) {
+    // If this is the current project, include its chats as children
+    const projectChats = chatsInCurrentProject.value
+      .filter((chat) => chat.projectId === project.id)
+      .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+      .map((chat) => formatProjectChatItem(project, chat))
+
+    return {
+      ...baseItem,
+      children: projectChats,
+    }
+  }
+
+  return baseItem
+}
+
+async function handleCreateProject() {
+  const newProject = await createProject()
+  await createChatAndNavigate({ projectId: newProject.id })
+}
 </script>
 
 <template>
@@ -98,6 +160,31 @@ function formatChatItem(chat: Chat): NavigationMenuItem {
     class="fixed top-16 left-0 bottom-0 w-64 transition-transform duration-300 z-40 bg-(--ui-bg-muted) border-r-(--ui-border) border-r"
     :class="{ '-translate-x-full': !isOpen }"
   >
+    <div
+      v-if="formattedProjectItems.length > 0"
+      class="mb-4 overflow-auto p-4 border-b border-(--ui-border)"
+    >
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-sm font-semibold text-(--ui-text-muted)">Projects</h2>
+      </div>
+      <UButton
+        size="sm"
+        color="neutral"
+        variant="soft"
+        icon="i-heroicons-plus-small"
+        class="mt-2 w-full"
+        @click="handleCreateProject"
+      >
+        New Project
+      </UButton>
+      <!-- Use a key to force a re-render when the items change. There might be a timing issue with the accordion state management. -->
+      <UNavigationMenu
+        :key="`projects-${route.params.projectId}`"
+        orientation="vertical"
+        class="w-full mb-4"
+        :items="formattedProjectItems"
+      />
+    </div>
     <div :ref="refIds.sidebarScrollRef" class="h-full overflow-y-auto p-4">
       <div v-for="section in chatSections" :key="section.title" class="mb-4">
         <div class="flex justify-between items-center mb-2">

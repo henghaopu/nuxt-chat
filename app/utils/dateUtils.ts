@@ -3,9 +3,8 @@ const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000 // 24 hours × 60 minutes × 60
 /**
  * Check if a date is within the last specified number of days
  *
- * Note: This function measures 24-hour periods, not calendar days.
- * For example, if it's currently 2 PM and you check a date from yesterday at 10 AM,
- * that's considered 1.17 days ago (28 hours / 24).
+ * Note: This function measures 24-hour periods for days > 0, but for days = 0
+ * it checks if the date is on the same calendar day as today.
  *
  * @param date - The date to check (should be in the past or today)
  * @param days - Number of days (24-hour periods) to look back from today
@@ -13,6 +12,11 @@ const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000 // 24 hours × 60 minutes × 60
  *
  * @example
  * Assuming current date is September 12, 2025 at 2:00 PM
+ *
+ * Same day checks (days = 0)
+ * isWithinLastDays(new Date('2025-09-12T10:00'), 0) // true - earlier today
+ * isWithinLastDays(new Date('2025-09-12T23:59'), 0) // true - later today
+ * isWithinLastDays(new Date('2025-09-11T23:59'), 0) // false - yesterday
  *
  * Recent dates (within range)
  * isWithinLastDays(new Date('2025-09-10'), 7) // true - 2 days ago
@@ -38,6 +42,15 @@ export function isWithinLastDays(date: Date, days: number): boolean {
 
   if (date > currentDate) return false // silent fail
 
+  // Special case for days = 0: check if it's the same calendar day
+  if (days === 0) {
+    return (
+      date.getFullYear() === currentDate.getFullYear() &&
+      date.getMonth() === currentDate.getMonth() &&
+      date.getDate() === currentDate.getDate()
+    )
+  }
+
   const diffTimestamp = currentDate.getTime() - date.getTime()
   const diffDays = diffTimestamp / MILLISECONDS_PER_DAY
 
@@ -45,25 +58,25 @@ export function isWithinLastDays(date: Date, days: number): boolean {
 }
 
 /**
- * Check if a date falls between a specific range of days ago
+ * Check if a date falls between a specific range of days ago (inclusive on both ends)
  *
  * @param date - The date to check
  * @param minDaysAgo - Minimum days ago (closer to today). 0 means today.
  * @param maxDaysAgo - Maximum days ago (further from today). If undefined, means "older than minDaysAgo"
- * @returns true if the date falls between the specified days ago range
+ * @returns true if the date falls between the specified days ago range (inclusive)
  *
  * @example
- * Today to yesterday
- * isBetweenDaysAgo(date, 0, 1) // 0-1 days ago
+ * Today only
+ * isBetweenDaysAgo(date, 0, 0) // only today
  *
- * Yesterday to last week
- * isBetweenDaysAgo(date, 1, 7) // 1-7 days ago
+ * Yesterday to last week (days 1-7)
+ * isBetweenDaysAgo(date, 1, 7) // 1-7 days ago (inclusive)
  *
- * Last week to last month
- * isBetweenDaysAgo(date, 7, 30) // 7-30 days ago
+ * Last month excluding last week (days 8-30)
+ * isBetweenDaysAgo(date, 8, 30) // 8-30 days ago (inclusive)
  *
  * Older than 30 days
- * isBetweenDaysAgo(date, 30) // more than 30 days ago
+ * isBetweenDaysAgo(date, 31) // more than 30 days ago
  */
 export function isBetweenDaysAgo(
   date: Date,
@@ -75,8 +88,23 @@ export function isBetweenDaysAgo(
     return !isWithinLastDays(date, minDaysAgo)
   }
 
-  // Date must be within maxDaysAgo but NOT within minDaysAgo
+  // Special case: if minDaysAgo === maxDaysAgo, check exact day range
+  if (minDaysAgo === maxDaysAgo) {
+    if (minDaysAgo === 0) {
+      // Today only - use calendar day check
+      return isWithinLastDays(date, 0)
+    }
+    // Specific day range - must be within maxDaysAgo but not within (minDaysAgo - 1)
+    return (
+      isWithinLastDays(date, maxDaysAgo) &&
+      !isWithinLastDays(date, minDaysAgo - 1)
+    )
+  }
+
+  // Date must be within maxDaysAgo but not within (minDaysAgo - 1)
+  // This makes both minDaysAgo and maxDaysAgo inclusive
   return (
-    isWithinLastDays(date, maxDaysAgo) && !isWithinLastDays(date, minDaysAgo)
+    isWithinLastDays(date, maxDaysAgo) &&
+    !isWithinLastDays(date, minDaysAgo - 1)
   )
 }
