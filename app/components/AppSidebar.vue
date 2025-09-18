@@ -156,12 +156,12 @@ async function handleCreateProject() {
 
 <template>
   <aside
-    class="fixed top-16 left-0 bottom-0 w-64 transition-transform duration-300 z-40 bg-(--ui-bg-muted) border-r-(--ui-border) border-r"
+    class="fixed top-16 left-0 bottom-0 w-64 transition-transform duration-300 z-40 bg-(--ui-bg-muted) border-r-(--ui-border) border-r overflow-y-auto"
     :class="{ '-translate-x-full': !isOpen }"
   >
     <div
       v-if="formattedProjectItems.length > 0"
-      class="mb-4 overflow-auto p-4 border-b border-(--ui-border)"
+      class="mb-4 p-4 border-b border-(--ui-border)"
     >
       <div class="flex justify-between items-center mb-2">
         <h2 class="text-sm font-semibold text-(--ui-text-muted)">Projects</h2>
@@ -184,7 +184,7 @@ async function handleCreateProject() {
         :items="formattedProjectItems"
       />
     </div>
-    <div :ref="refIds.sidebarScrollRef" class="h-full overflow-y-auto p-4">
+    <div :ref="refIds.sidebarScrollRef" class="p-4">
       <div v-for="section in chatSections" :key="section.title" class="mb-4">
         <div class="flex justify-between items-center mb-2">
           <h2 class="text-sm font-semibold text-(--ui-text-muted)">
