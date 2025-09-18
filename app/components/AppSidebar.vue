@@ -17,10 +17,9 @@ const chatsInCurrentProject = computed(() =>
 const formattedProjectItems = computed(() => {
   if (!projects.value) return []
 
-  // Sort projects by creation date (recent to past)
-  // Using ID as proxy for creation order since higher ID = more recent
+  // Sort projects by last activity (recent to past)
   const sortedProjects = [...projects.value].sort((a, b) => {
-    return parseInt(b.id) - parseInt(a.id) // Descending order (recent to past)
+    return b.updatedAt.getTime() - a.updatedAt.getTime() // Descending order (recent to past)
   })
 
   return sortedProjects.map(formatProjectItem)

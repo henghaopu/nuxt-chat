@@ -1,5 +1,3 @@
-import { mockProject } from '~/mocks/chat.mocks'
-
 export default function useProjects() {
   const projects = useState<Project[]>('projects', () => [mockProject])
 
@@ -9,6 +7,8 @@ export default function useProjects() {
     const newProject = {
       id: newProjectIndex.toString(),
       name: `Project ${newProjectIndex}`,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
     projects.value.push(newProject)
 

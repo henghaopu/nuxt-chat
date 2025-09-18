@@ -16,6 +16,8 @@ export default function useChat(chatId: string) {
       id: newMessageIndex.toString(),
       content: message,
       role: 'user',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
 
     const aiResponseMessage = await $fetch<ChatMessage>('/api/ai', {

@@ -1,4 +1,4 @@
-import { mockChat } from '~/mocks/chat.mocks'
+import { mockChat } from '~~/shared/utils/chat.mocks'
 
 export default function useChats() {
   const chats = useState<Chat[]>('chats', () => [mockChat])
