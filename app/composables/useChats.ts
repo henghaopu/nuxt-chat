@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { mockChat } from '~~/shared/utils/chat.mocks'
 
 export default function useChats() {
@@ -7,7 +8,7 @@ export default function useChats() {
     const currentChatCount = chats.value.length
     const newChatIndex = currentChatCount + 1
     const newChat = {
-      id: newChatIndex.toString(),
+      id: uuidv4(),
       title: `New Chat (${newChatIndex})`,
       messages: [],
       projectId: options.projectId,
