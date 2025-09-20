@@ -1,15 +1,14 @@
-import {
-  createMessageInChat,
-  getAllMessagesInChat,
-} from '~~/server/repositories/chatRepository'
-import {
-  createOpenAIModel,
-  generateAIResponseText,
-} from '~~/server/services/aiService'
+import { createMessageInChat } from '~~/server/repositories/chatRepository'
+
+// Define the request body type for better type safety and dev tools
+type MessageInput = {
+  role: 'user' | 'assistant'
+  content: string
+}
 
 export default defineEventHandler(async (event) => {
   const { id: chatId } = getRouterParams(event)
-  const body = await readBody(event)
+  const body = await readBody<MessageInput>(event)
 
   // Validate required fields
   if (!body.role || !body.content) {
@@ -32,30 +31,5 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Generate AI response if the message was from user
-  if (body.role === 'user') {
-    try {
-      const history = getAllMessagesInChat(chatId)
-      const model = createOpenAIModel()
-      const reply = await generateAIResponseText(model, history || [])
-
-      const aiMessage = await createMessageInChat(chatId, {
-        role: 'assistant',
-        content: reply as string,
-      })
-
-      // Return both messages
-      return {
-        userMessage,
-        aiMessage,
-      }
-    } catch (error) {
-      console.error('Failed to generate AI response:', error)
-      // Return just the user message if AI generation fails
-      return { userMessage }
-    }
-  }
-
-  // For non-user messages, just return the created message
-  return { message: userMessage }
+  return userMessage
 })

@@ -40,7 +40,7 @@ export async function createChat(data: {
   return {
     ...newChat,
     messages: [],
-    project: data.projectId ? getProjectById(data.projectId) : undefined,
+    project: data.projectId ? getProjectById(data.projectId) || null : null,
   }
 }
 
@@ -52,7 +52,7 @@ export async function getChatById(
 
   return {
     ...chat,
-    project: chat.projectId ? getProjectById(chat.projectId) : undefined,
+    project: chat.projectId ? getProjectById(chat.projectId) || null : null,
   }
 }
 

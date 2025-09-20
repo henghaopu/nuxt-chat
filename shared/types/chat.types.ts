@@ -38,5 +38,5 @@ export interface Chat {
 // 5. Extended/composite interfaces last
 // Populated (已填入/載入的): include relational data
 export interface PopulatedChat extends Chat {
-  project?: Project
+  project: Project | null
 }
