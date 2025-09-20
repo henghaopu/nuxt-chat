@@ -2,7 +2,7 @@ import { generateText } from 'ai'
 import { createOpenAI } from '@ai-sdk/openai'
 import { createOllama } from 'ollama-ai-provider'
 import type { OpenAIChatModelId } from '@ai-sdk/openai/internal'
-import type { LanguageModel } from 'ai'
+import type { LanguageModel, ModelMessage } from 'ai'
 
 // Extra wrapper could be used to
 // - hide API key management from callers
@@ -28,5 +28,21 @@ export async function generateAIResponseText(
     return new Error('Cannot generate AI response: no messages provided')
 
   const response = await generateText({ model, messages })
+  return response.text.trim()
+}
+
+export async function generateTitleFromMessages(
+  model: LanguageModel, // Inject model dependency
+  messages: Omit<ChatMessage, 'id' | 'createdAt' | 'updatedAt'>[],
+) {
+  // Use a system prompt to guide the model to generate a concise title
+  const systemPrompt =
+    'Generate a concise title for the following conversation in three or less short words.'
+  const promptMessages: ModelMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...messages,
+  ]
+
+  const response = await generateText({ model, messages: promptMessages })
   return response.text.trim()
 }
