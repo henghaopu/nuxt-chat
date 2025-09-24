@@ -98,7 +98,13 @@ function getChatMenuItemsByDaysAgo(
 ) {
   return chats
     .filter((chat) => isBetweenDaysAgo(chat.updatedAt, minDaysAgo, maxDaysAgo))
-    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+    .sort((a, b) => {
+      const aDate =
+        typeof a.updatedAt === 'string' ? new Date(a.updatedAt) : a.updatedAt
+      const bDate =
+        typeof b.updatedAt === 'string' ? new Date(b.updatedAt) : b.updatedAt
+      return bDate.getTime() - aDate.getTime()
+    })
     .map(formatChatItem)
 }
 

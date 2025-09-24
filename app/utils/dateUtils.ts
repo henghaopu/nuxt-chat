@@ -37,21 +37,23 @@ const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000 // 24 hours × 60 minutes × 60
  * isWithinLastDays(new Date('2025-09-15'), 7) // false - silent fail (good for filtering scenarios)
  * isWithinLastDays(new Date('2025-12-25'), 5) // false - silent fail
  */
-export function isWithinLastDays(date: Date, days: number): boolean {
+// When data comes from the API, dates are serialized as strings, not Date objects.
+export function isWithinLastDays(date: Date | string, days: number): boolean {
+  const dateObj = typeof date === 'string' ? new Date(date) : date
   const currentDate = new Date()
 
-  if (date > currentDate) return false // silent fail
+  if (dateObj > currentDate) return false // silent fail
 
   // Special case for days = 0: check if it's the same calendar day
   if (days === 0) {
     return (
-      date.getFullYear() === currentDate.getFullYear() &&
-      date.getMonth() === currentDate.getMonth() &&
-      date.getDate() === currentDate.getDate()
+      dateObj.getFullYear() === currentDate.getFullYear() &&
+      dateObj.getMonth() === currentDate.getMonth() &&
+      dateObj.getDate() === currentDate.getDate()
     )
   }
 
-  const diffTimestamp = currentDate.getTime() - date.getTime()
+  const diffTimestamp = currentDate.getTime() - dateObj.getTime()
   const diffDays = diffTimestamp / MILLISECONDS_PER_DAY
 
   return diffDays <= days
@@ -79,7 +81,7 @@ export function isWithinLastDays(date: Date, days: number): boolean {
  * isBetweenDaysAgo(date, 31) // more than 30 days ago
  */
 export function isBetweenDaysAgo(
-  date: Date,
+  date: Date | string,
   minDaysAgo: number,
   maxDaysAgo?: number,
 ): boolean {
