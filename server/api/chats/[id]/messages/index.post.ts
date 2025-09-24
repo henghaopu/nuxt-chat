@@ -1,14 +1,9 @@
 import { createMessageInChat } from '~~/server/repositories/chatRepository'
-
-// Define the request body type for better type safety and dev tools
-type MessageInput = {
-  role: 'user' | 'assistant'
-  content: string
-}
+import type { CreateMessageInput } from '~~/shared/types/api.types'
 
 export default defineEventHandler(async (event) => {
   const { id: chatId } = getRouterParams(event)
-  const body = await readBody<MessageInput>(event)
+  const body = await readBody<CreateMessageInput>(event)
 
   // Validate required fields
   if (!body.role || !body.content) {
