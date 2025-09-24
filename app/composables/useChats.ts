@@ -1,8 +1,14 @@
 import { v4 as uuidv4 } from 'uuid'
-import { mockChat } from '~~/shared/utils/chat.mocks'
 
 export default function useChats() {
-  const chats = useState<Chat[]>('chats', () => [mockChat])
+  // Setup phase registration: Vue tracks composables during the setup phase
+  const { data: chats } = useAsyncData<Chat[]>(
+    'chats',
+    () => $fetch<Chat[]>('/api/chats'),
+    {
+      default: () => [],
+    },
+  )
 
   function createChat(options: { projectId?: string } = {}) {
     const currentChatCount = chats.value.length
@@ -36,5 +42,10 @@ export default function useChats() {
     return chats.value.filter((c) => c.projectId === projectId)
   }
 
-  return { chats, createChat, createChatAndNavigate, findChatsByProjectId }
+  return {
+    chats,
+    createChat,
+    createChatAndNavigate,
+    findChatsByProjectId,
+  }
 }
