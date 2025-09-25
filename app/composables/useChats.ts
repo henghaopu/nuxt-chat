@@ -6,18 +6,10 @@ export default function useChats() {
     data: chats,
     execute,
     status,
-  } = useAsyncData<Chat[]>(
-    'chats',
-    () => {
-      // Without this pattern, this heavy computation runs every time
-      // const expensiveResult = someHeavyComputation()
-      return $fetch<Chat[]>('/api/chats')
-    },
-    {
-      immediate: false, // Disable immediate execution
-      default: () => [],
-    },
-  )
+  } = useFetch<Chat[]>('/api/chats', {
+    immediate: false,
+    default: () => [],
+  })
 
   async function fetchChats() {
     // Prevent multiple callback executions (only fetch when the request has not started)
