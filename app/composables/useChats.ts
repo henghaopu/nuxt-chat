@@ -2,13 +2,28 @@ import { v4 as uuidv4 } from 'uuid'
 
 export default function useChats() {
   // Setup phase registration: Vue tracks composables during the setup phase
-  const { data: chats } = useAsyncData<Chat[]>(
+  const {
+    data: chats,
+    execute,
+    status,
+  } = useAsyncData<Chat[]>(
     'chats',
-    () => $fetch<Chat[]>('/api/chats'),
+    () => {
+      // Without this pattern, this heavy computation runs every time
+      // const expensiveResult = someHeavyComputation()
+      return $fetch<Chat[]>('/api/chats')
+    },
     {
+      immediate: false, // Disable immediate execution
       default: () => [],
     },
   )
+
+  async function fetchChats() {
+    // Prevent multiple callback executions (only fetch when the request has not started)
+    if (status.value !== 'idle') return
+    await execute()
+  }
 
   function createChat(options: { projectId?: string } = {}) {
     const currentChatCount = chats.value.length
@@ -47,5 +62,6 @@ export default function useChats() {
     createChat,
     createChatAndNavigate,
     findChatsByProjectId,
+    fetchChats,
   }
 }
