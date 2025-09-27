@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid'
 
 export default function useChats() {
+  const chats = useState<Chat[]>('chats', () => [])
   // Setup phase registration: Vue tracks composables during the setup phase
   const {
-    data: chats,
+    data: fetchedChats,
     execute,
     status,
   } = useFetch<Chat[]>('/api/chats', {
@@ -15,6 +16,7 @@ export default function useChats() {
     // Prevent multiple callback executions (only fetch when the request has not started)
     if (status.value !== 'idle') return
     await execute()
+    chats.value = fetchedChats.value
   }
 
   function createChat(options: { projectId?: string } = {}) {

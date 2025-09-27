@@ -29,7 +29,7 @@ const mockChat: Chat = {
   id: uuidv4(),
   title: 'Welcome to the chat!',
   messages: mockMessages,
-  projectId: mockProject.id,
+  // projectId: mockProject.id,
   createdAt: new Date(),
   updatedAt: new Date(),
 }
